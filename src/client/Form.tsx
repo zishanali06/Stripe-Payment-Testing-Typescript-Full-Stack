@@ -6,13 +6,19 @@ class Form extends React.Component<IFormProps, IFormState> {
     constructor(props: IFormProps) {
         super(props);
         this.state = {
-            name: ""
+            name: "",
+            amount: ""
         }
     }
 
-    handleSubmit(e: React.ChangeEvent<HTMLFormElement>){
+    handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Test");
+        try {
+            let token = await this.props.stripe.createToken({ name: this.state.name });
+            console.log(token);
+        } catch (e) {
+            throw e;
+        }
     }
 
     render() {
@@ -33,8 +39,8 @@ class Form extends React.Component<IFormProps, IFormState> {
                     <input
                         type="text"
                         className="input-group my-1 p-1 border border-dark"
-                        value={this.state.name}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ name: e.target.value })}
+                        value={this.state.amount}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ amount: e.target.value })}
                     />
                     <label>Credit Card Information:</label>
                     <CardElement className="p-2 border border0-dark" />
@@ -45,9 +51,10 @@ class Form extends React.Component<IFormProps, IFormState> {
     }
 };
 
-interface IFormProps { };
+interface IFormProps extends ReactStripeElements.InjectedStripeProps { };
 interface IFormState {
-    name: string
+    name: string,
+    amount: string
 };
 
 export default injectStripe(Form);
