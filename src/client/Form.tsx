@@ -15,7 +15,15 @@ class Form extends React.Component<IFormProps, IFormState> {
         e.preventDefault();
         try {
             let token = await this.props.stripe.createToken({ name: this.state.name });
-            console.log(token);
+            let amount = this.state.amount;
+            await fetch('/api/donate', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ token, amount })
+            });
+            //redirect, clear inputs, thank alert
         } catch (e) {
             throw e;
         }
