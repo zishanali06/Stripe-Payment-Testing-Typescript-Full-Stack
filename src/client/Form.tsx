@@ -14,8 +14,9 @@ class Form extends React.Component<IFormProps, IFormState> {
     handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            let token = await this.props.stripe.createToken({ name: this.state.name });
+            let { token } = await this.props.stripe.createToken({ name: this.state.name });
             let amount = this.state.amount;
+            console.log(token);
             await fetch('/api/donate', {
                 method: 'POST',
                 headers: {
